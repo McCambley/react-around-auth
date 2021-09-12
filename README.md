@@ -1,4 +1,4 @@
-# ⚛️ Around The U.S.
+# 🗝 Around The U.S.
 
 ## [Check out this project live!](https://mccambley.github.io/around-react)
 
@@ -9,6 +9,7 @@
 - ### After recent updates, connecting the page to to a server with an API, this hub now displays many more photos from users all over the world documenting their own adventures all around the world. This page also allows a user to update their profile and like photos. They can update their name and title via a popup form and they can like photos by clicking the hearts displayed below each photo.
 
 - ### Users can also delete their photos if they so choose. Since all this information is stored in a back-end server the state of the page persists after refresh.
+- ### This iteration of "Around the U.S. features authorization and registration features on top of the existing frontend code from previous projects
 
 ## Recent Update
 
