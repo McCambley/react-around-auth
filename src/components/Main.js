@@ -24,7 +24,8 @@ export default function Main(props) {
                 type="button"
                 name="Edit profile"
                 className={`profile__edit-button ${props.isLoading ? 'hide' : ''}`}
-                aria-label="Edit profile"></button>
+                aria-label="Edit profile"
+              ></button>
             </div>
             <p className={`profile__title ${props.isLoading ? 'shimmer' : ''}`}>{currentUser.about}</p>
           </div>
@@ -34,7 +35,8 @@ export default function Main(props) {
           type="button"
           name="Add image"
           className={`profile__add-button ${props.isLoading ? 'hide' : ''}`}
-          aria-label="Add image"></button>
+          aria-label="Add image"
+        ></button>
       </section>
       <section className="elements">
         {props.cards.map((card, index) => (
