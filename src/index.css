@@ -17,6 +17,7 @@
 @import url(./blocks/popup/popup.css);
 @import url(./blocks/shimmer/shimmer.css);
 @import url(./blocks/hide/hide.css);
+@import url(./blocks/error/error.css);
 
 /* modifiers */
 @import url(./blocks/popup/_opened/popup_opened.css);

@@ -12,6 +12,7 @@ import ProtectedRoute from './ProtectedRoute';
 import Register from './Register';
 import Login from './Login';
 import InfoTooltip from './InfoTooltip';
+import Error from './Error';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import api from '../utils/api';
 
@@ -167,6 +168,14 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Switch>
+          <Route path="/signin">
+            <Header />
+            <Login />
+          </Route>
+          <Route path="/signup">
+            <Header />
+            <Register />
+          </Route>
           <ProtectedRoute exact path="/" loggedIn={loggedIn}>
             <Header />
             <Main
@@ -210,13 +219,9 @@ function App() {
             />
             <ImagePopup card={selectedCard} onClose={closeAllPopups} />
           </ProtectedRoute>
-          <Route path="/login">
+          <Route path="/">
             <Header />
-            <Login />
-          </Route>
-          <Route path="/register">
-            <Header />
-            <Register />
+            <Error />
           </Route>
         </Switch>
       </div>
