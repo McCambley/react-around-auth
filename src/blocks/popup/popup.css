@@ -9,9 +9,12 @@
 @import url(./__image/popup__image.css);
 @import url(./__caption/popup__caption.css);
 @import url(./__figure/popup__figure.css);
+@import url(./__success/popup__success.css);
+@import url(./__message/popup__message.css);
 
 /* Modifiers */
 @import url(./__container/_role/popup__container_role_image.css);
+@import url(./__container/_role/popup__container_role_success.css);
 @import url(./__save-button/_disabled/popup__save-button_disabled.css);
 @import url(./__input/_invalid/popup__input_invalid.css);
 @import url(./__input-error/_active/popup__input-error_active.css);
@@ -30,5 +33,6 @@
   top: 0;
   left: 0;
   z-index: 1;
+  backdrop-filter: blur(2px);
   /* transition: visibility 0.1s ease, opacity 0.1s ease; */
 }

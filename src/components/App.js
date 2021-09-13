@@ -20,6 +20,7 @@ function App() {
   const [isEditAvatarPopupOpen, updateAvatarPopupState] = React.useState(false);
   const [isEditProfilePopupOpen, updateEditProfilePopupState] = React.useState(false);
   const [isAddPlacePopupOpen, updateAddPlacePopupState] = React.useState(false);
+  const [isInfoToolTipOpen, updateInfoTooltipState] = React.useState(true);
   const [isDeletePlacePopupOpen, updateDeletePlacePopupState] = React.useState(false);
   const [isSubmitPending, updateSubmitPendingStatus] = React.useState(false);
   const [selectedCard, updateSelectedCard] = React.useState(null);
@@ -28,6 +29,7 @@ function App() {
   const [currentUser, updateCurrentUser] = React.useState({});
   const [cards, updateCards] = React.useState([]);
   const [loggedIn, setLoggedIn] = React.useState(true);
+  const [isSuccess, setIsSuccess] = React.useState(true);
 
   React.useEffect(() => {
     api
@@ -152,6 +154,7 @@ function App() {
     updateEditProfilePopupState(false);
     updateAddPlacePopupState(false);
     updateDeletePlacePopupState(false);
+    updateInfoTooltipState(false);
     updateSelectedCard(null);
     window.removeEventListener('keydown', handleCloseOnEscape);
     window.removeEventListener('click', handleCloseOnOverlay);
@@ -169,15 +172,35 @@ function App() {
       <div className="page">
         <Switch>
           <Route path="/signin">
-            <Header />
+            <Header loggedIn={loggedIn} navText="Sign up" path="/signup" />
             <Login />
+            <InfoTooltip
+              isOpen={isInfoToolTipOpen}
+              isSuccess={isSuccess}
+              onClose={closeAllPopups}
+              action={'logged in'}
+            />
           </Route>
           <Route path="/signup">
-            <Header />
+            <Header loggedIn={loggedIn} navText="Log in" path="/signin" />
             <Register />
+            <InfoTooltip
+              isOpen={isInfoToolTipOpen}
+              isSuccess={isSuccess}
+              onClose={closeAllPopups}
+              action={'registered'}
+            />
           </Route>
           <ProtectedRoute exact path="/" loggedIn={loggedIn}>
-            <Header />
+            <Header
+              loggedIn={loggedIn}
+              navText="Log out"
+              path="/signin"
+              // not sure if needed
+              // handleNavClick={() => {
+              //   setLoggedIn(false);
+              // }}
+            />
             <Main
               onEditAvatarClick={handleAvatarClick}
               onEditProfileClick={handleEditProfileClick}
