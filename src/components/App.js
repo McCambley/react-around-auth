@@ -9,12 +9,12 @@ import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
 import DeletePlacePopup from './DeletePlacePopup';
 import ProtectedRoute from './ProtectedRoute';
-import Register from './Register';
-import Login from './Login';
+import Login from './AuthForm';
 import InfoTooltip from './InfoTooltip';
 import Error from './Error';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import api from '../utils/api';
+import AuthForm from './AuthForm';
 
 function App() {
   const [isEditAvatarPopupOpen, updateAvatarPopupState] = React.useState(false);
@@ -173,7 +173,7 @@ function App() {
         <Switch>
           <Route path="/signin">
             <Header loggedIn={loggedIn} navText="Sign up" path="/signup" />
-            <Login />
+            <AuthForm role="login" handleSubmit={() => console.log('submitting login')} />
             <InfoTooltip
               isOpen={isInfoToolTipOpen}
               isSuccess={isSuccess}
@@ -183,7 +183,7 @@ function App() {
           </Route>
           <Route path="/signup">
             <Header loggedIn={loggedIn} navText="Log in" path="/signin" />
-            <Register />
+            <AuthForm role="register" handleSubmit={() => console.log('submitting register')} />
             <InfoTooltip
               isOpen={isInfoToolTipOpen}
               isSuccess={isSuccess}

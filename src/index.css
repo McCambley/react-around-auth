@@ -18,6 +18,7 @@
 @import url(./blocks/shimmer/shimmer.css);
 @import url(./blocks/hide/hide.css);
 @import url(./blocks/error/error.css);
+@import url(./blocks/auth/auth.css);
 
 /* modifiers */
 @import url(./blocks/popup/_opened/popup_opened.css);
