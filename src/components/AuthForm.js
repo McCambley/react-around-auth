@@ -18,6 +18,7 @@ export default function AuthForm({
   const [password, setPassword] = React.useState('');
   // tooltip states
   const [isSuccess, setIsSuccess] = React.useState(true);
+  const redirectPath = role === 'register' ? '/signin' : '/';
 
   React.useEffect(() => {
     setToolTipActionText(role === 'login' ? 'logged in' : 'registered');
@@ -35,9 +36,10 @@ export default function AuthForm({
         setIsSuccess(true);
         updateInfoTooltipState(true);
         // display success message for 1.5sec then redirect
-        setTimeout(() => {
-          history.push('/');
-        }, 1500);
+        // setTimeout(() => {
+        //   history.push('/');
+        // }, 1500);
+        history.push(redirectPath);
       } else {
         // display failure tooltip
         setIsSuccess(false);

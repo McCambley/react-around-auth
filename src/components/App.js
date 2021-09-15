@@ -23,7 +23,7 @@ function App() {
   const [isEditProfilePopupOpen, updateEditProfilePopupState] = React.useState(false);
   const [isAddPlacePopupOpen, updateAddPlacePopupState] = React.useState(false);
   const [isDeletePlacePopupOpen, updateDeletePlacePopupState] = React.useState(false);
-  const [isInfoToolTipOpen, updateInfoTooltipState] = React.useState(true);
+  const [isInfoToolTipOpen, updateInfoTooltipState] = React.useState(false);
   // UX states
   const [isLoading, updateLoading] = React.useState(true);
   const [isSubmitPending, updateSubmitPendingStatus] = React.useState(false);
@@ -66,6 +66,14 @@ function App() {
       })
       .catch((err) => console.error(`Problem fetching user information: ${err}`));
   }, []);
+
+  React.useEffect(() => {
+    if (isInfoToolTipOpen) {
+      window.addEventListener('keydown', closeOnEnter);
+    } else {
+      window.removeEventListener('keydown', closeOnEnter);
+    }
+  }, [isInfoToolTipOpen]);
 
   function handleAvatarClick() {
     updateAvatarPopupState(true);
@@ -182,6 +190,12 @@ function App() {
   }
   function handleCloseOnOverlay(e) {
     e.target.classList.contains('popup') && closeAllPopups();
+  }
+  function closeOnEnter(evt) {
+    if (evt.key === 'Enter') {
+      evt.preventDefault();
+      closeAllPopups();
+    }
   }
 
   return (

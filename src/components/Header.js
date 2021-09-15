@@ -8,7 +8,7 @@ export default function Header({ loggedIn, navText, handleNavClick, path }) {
   const [isHamburgerOpen, setIsHamburgerOpen] = React.useState(false);
   const email = 'Jakemccamb16@gmail.com';
 
-  function handleHamburgerClick() {
+  function toggleHamburger() {
     setIsHamburgerOpen(!isHamburgerOpen);
   }
   return (
@@ -17,7 +17,7 @@ export default function Header({ loggedIn, navText, handleNavClick, path }) {
       {loggedIn && (
         <div className={`header__dropdown ${isHamburgerOpen && 'header__dropdown_open'}`}>
           <p className="header__dropdown-email">{email}</p>
-          <Link to={path} className="header__dropdown-link">
+          <Link to={path} onClick={toggleHamburger} className="header__dropdown-link">
             {navText}
           </Link>
         </div>
@@ -35,7 +35,7 @@ export default function Header({ loggedIn, navText, handleNavClick, path }) {
                 {navText}
               </Link>
             </nav>
-            <button className="header__hamburger" onClick={handleHamburgerClick}>
+            <button className="header__hamburger" onClick={toggleHamburger}>
               <img
                 src={!isHamburgerOpen ? hamburgerOpen : hamburgerClose}
                 className="header__hamburger-icon"
