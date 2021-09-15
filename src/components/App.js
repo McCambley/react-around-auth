@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useHistory } from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -14,22 +14,39 @@ import InfoTooltip from './InfoTooltip';
 import Error from './Error';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import api from '../utils/api';
+import { register, login, validateUser } from '../utils/auth';
 import AuthForm from './AuthForm';
 
 function App() {
+  // popup states
   const [isEditAvatarPopupOpen, updateAvatarPopupState] = React.useState(false);
   const [isEditProfilePopupOpen, updateEditProfilePopupState] = React.useState(false);
   const [isAddPlacePopupOpen, updateAddPlacePopupState] = React.useState(false);
-  const [isInfoToolTipOpen, updateInfoTooltipState] = React.useState(true);
   const [isDeletePlacePopupOpen, updateDeletePlacePopupState] = React.useState(false);
+  const [isInfoToolTipOpen, updateInfoTooltipState] = React.useState(true);
+  // UX states
+  const [isLoading, updateLoading] = React.useState(true);
   const [isSubmitPending, updateSubmitPendingStatus] = React.useState(false);
+  const [toolTipActionText, setToolTipActionText] = React.useState('');
+
+  // card states
   const [selectedCard, updateSelectedCard] = React.useState(null);
   const [cardQueuedForDeletion, updateCardQueuedForDeletion] = React.useState(null);
-  const [isLoading, updateLoading] = React.useState(true);
-  const [currentUser, updateCurrentUser] = React.useState({});
   const [cards, updateCards] = React.useState([]);
+  // user states
+  const [currentUser, updateCurrentUser] = React.useState({});
+  // auth states
   const [loggedIn, setLoggedIn] = React.useState(true);
-  const [isSuccess, setIsSuccess] = React.useState(true);
+  const history = useHistory();
+
+  React.useEffect(() => {
+    // register(`${Math.random()}@test.com`, 'cool');
+    // .then((response) => {
+    //   console.log(response.data._id);
+    // });
+    // validateUser();
+    console.log(history);
+  }, []);
 
   React.useEffect(() => {
     api
@@ -173,22 +190,26 @@ function App() {
         <Switch>
           <Route path="/signin">
             <Header loggedIn={loggedIn} navText="Sign up" path="/signup" />
-            <AuthForm role="login" handleSubmit={() => console.log('submitting login')} />
-            <InfoTooltip
-              isOpen={isInfoToolTipOpen}
-              isSuccess={isSuccess}
-              onClose={closeAllPopups}
-              action={'logged in'}
+            <AuthForm
+              role="login"
+              handleAuth={login}
+              closeAllPopups={closeAllPopups}
+              isTooltipOpen={isInfoToolTipOpen}
+              updateInfoTooltipState={updateInfoTooltipState}
+              toolTipActionText={toolTipActionText}
+              setToolTipActionText={setToolTipActionText}
             />
           </Route>
           <Route path="/signup">
             <Header loggedIn={loggedIn} navText="Log in" path="/signin" />
-            <AuthForm role="register" handleSubmit={() => console.log('submitting register')} />
-            <InfoTooltip
-              isOpen={isInfoToolTipOpen}
-              isSuccess={isSuccess}
-              onClose={closeAllPopups}
-              action={'registered'}
+            <AuthForm
+              role="register"
+              handleAuth={register}
+              closeAllPopups={closeAllPopups}
+              isTooltipOpen={isInfoToolTipOpen}
+              updateInfoTooltipState={updateInfoTooltipState}
+              toolTipActionText={toolTipActionText}
+              setToolTipActionText={setToolTipActionText}
             />
           </Route>
           <ProtectedRoute exact path="/" loggedIn={loggedIn}>
@@ -241,6 +262,12 @@ function App() {
               onClose={closeAllPopups}
             />
             <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+            <InfoTooltip
+              isOpen={isInfoToolTipOpen}
+              onClose={closeAllPopups}
+              isSuccess={true}
+              action={toolTipActionText}
+            />
           </ProtectedRoute>
           <Route path="/">
             <Header />
