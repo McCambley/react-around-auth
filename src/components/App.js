@@ -40,22 +40,23 @@ function App() {
   const [loggedIn, setLoggedIn] = React.useState(true);
   const history = useHistory();
 
-  const memoizedEscape = React.useCallback(
-    (evt) => {
-      handleCloseOnEscape(evt);
-    },
-    [handleCloseOnEscape]
-  );
+  const memoizedEscape = React.useCallback((evt) => {
+    evt.key === 'Escape' && closeAllPopups();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   React.useEffect(() => {
-    validateUser()
-      .then((res) => {
-        setUserEmail(res.data.email);
-      })
-      .catch((err) => {
-        handleLogout();
-        history.push('/signin');
-      });
+    loggedIn &&
+      validateUser()
+        .then((res) => {
+          setUserEmail(res.data.email);
+          console.log(`Validation success`);
+        })
+        .catch((err) => {
+          console.error(`Validation error: ${err}`);
+          handleLogout();
+          history.push('/signin');
+        });
   }, [history, loggedIn]);
 
   React.useEffect(() => {});
@@ -82,7 +83,7 @@ function App() {
   function handleLogout() {
     localStorage.removeItem('token');
     setLoggedIn(false);
-    console.log('Logging out!');
+    setUserEmail('');
   }
 
   function handleAvatarClick() {
@@ -193,10 +194,6 @@ function App() {
     updateSelectedCard(null);
     window.removeEventListener('keydown', memoizedEscape);
     window.removeEventListener('click', handleCloseOnOverlay);
-  }
-
-  function handleCloseOnEscape(e) {
-    e.key === 'Escape' && closeAllPopups();
   }
 
   function handleCloseOnOverlay(e) {

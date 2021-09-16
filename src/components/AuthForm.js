@@ -34,7 +34,7 @@ export default function AuthForm({
     updateInfoTooltipState(true);
     setTimeout(() => {
       updateInfoTooltipState(false);
-    }, 1500);
+    }, 2000);
   }
 
   function handleFormSubmit(e) {
