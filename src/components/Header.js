@@ -4,20 +4,25 @@ import hamburgerClose from '../images/hamburgerClose.svg';
 import { Link } from 'react-router-dom';
 import React from 'react';
 
-export default function Header({ loggedIn, navText, handleNavClick, path }) {
+export default function Header({ loggedIn, navText, handleLogout, path, userEmail }) {
   const [isHamburgerOpen, setIsHamburgerOpen] = React.useState(false);
-  const email = 'Jakemccamb16@gmail.com';
 
   function toggleHamburger() {
     setIsHamburgerOpen(!isHamburgerOpen);
   }
+
+  function handleLogoutFromDropdown() {
+    toggleHamburger();
+    handleLogout();
+  }
+
   return (
     <>
       {/* fancy dropdown menu */}
       {loggedIn && (
         <div className={`header__dropdown ${isHamburgerOpen && 'header__dropdown_open'}`}>
-          <p className="header__dropdown-email">{email}</p>
-          <Link to={path} onClick={toggleHamburger} className="header__dropdown-link">
+          <p className="header__dropdown-email">{userEmail}</p>
+          <Link to={path} onClick={handleLogoutFromDropdown} className="header__dropdown-link">
             {navText}
           </Link>
         </div>
@@ -30,8 +35,8 @@ export default function Header({ loggedIn, navText, handleNavClick, path }) {
         {loggedIn ? (
           <div>
             <nav className="header__nav-container">
-              <p className="header__email">{email}</p>
-              <Link to={path} className="header__link">
+              <p className="header__email">{userEmail}</p>
+              <Link to={path} onClick={handleLogout} className="header__link">
                 {navText}
               </Link>
             </nav>

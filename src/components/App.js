@@ -9,7 +9,7 @@ import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
 import DeletePlacePopup from './DeletePlacePopup';
 import ProtectedRoute from './ProtectedRoute';
-import Login from './AuthForm';
+// import Login from './AuthForm';
 import InfoTooltip from './InfoTooltip';
 import Error from './Error';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -35,20 +35,36 @@ function App() {
   const [cards, updateCards] = React.useState([]);
   // user states
   const [currentUser, updateCurrentUser] = React.useState({});
+  const [userEmail, setUserEmail] = React.useState('');
   // auth states
   const [loggedIn, setLoggedIn] = React.useState(true);
   const history = useHistory();
 
+  const memoizedEscape = React.useCallback(
+    (evt) => {
+      handleCloseOnEscape(evt);
+    },
+    [handleCloseOnEscape]
+  );
+
+  // const memoizedEnter = React.useCallback((evt) => {
+  //   handleCloseOnEnter(evt);
+  // }, []);
+
   React.useEffect(() => {
-    login(`cool@tasdfesttest.com`, 'cool').then((response) => {
-      console.log(response);
-    });
-    // register(`${Math.random()}@tasdfesttest.com`, 'cool').then((response) => {
-    //   console.log(response);
-    // });
-    // validateUser();
-    // console.log(history);
-  }, []);
+    validateUser()
+      .then((res) => {
+        console.log('Validated User, ', res);
+        setUserEmail(res.data.email);
+      })
+      .catch((err) => {
+        console.log('Error validating user: ', err);
+        handleLogout();
+        history.push('/signin');
+      });
+  }, [history, loggedIn]);
+
+  React.useEffect(() => {});
 
   React.useEffect(() => {
     api
@@ -69,50 +85,48 @@ function App() {
       .catch((err) => console.error(`Problem fetching user information: ${err}`));
   }, []);
 
-  React.useEffect(() => {
-    if (isInfoToolTipOpen) {
-      window.addEventListener('keydown', closeOnEnter);
-    } else {
-      window.removeEventListener('keydown', closeOnEnter);
-    }
-  }, [isInfoToolTipOpen]);
+  // React.useEffect(() => {
+  //   if (isInfoToolTipOpen) {
+  //     console.log('adding close on enter');
+  //     window.addEventListener('keydown', memoizedEnter);
+  //   }
+  // }, [isInfoToolTipOpen, memoizedEnter]);
 
-  // function handleRegister(email, password) {
-  //   register(email, password).then(data);
-  // }
-
-  // function handleLogin(email, password) {
-  //   login(email, password);
-  // }
+  function handleLogout() {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    // history.push('/signin');
+    console.log('Logging out!');
+  }
 
   function handleAvatarClick() {
     updateAvatarPopupState(true);
-    window.addEventListener('keydown', handleCloseOnEscape);
+    window.addEventListener('keydown', memoizedEscape);
     window.addEventListener('click', handleCloseOnOverlay);
   }
 
   function handleEditProfileClick() {
     updateEditProfilePopupState(true);
-    window.addEventListener('keydown', handleCloseOnEscape);
+    window.addEventListener('keydown', memoizedEscape);
     window.addEventListener('click', handleCloseOnOverlay);
   }
 
   function handleAddPlaceClick() {
     updateAddPlacePopupState(true);
-    window.addEventListener('keydown', handleCloseOnEscape);
+    window.addEventListener('keydown', memoizedEscape);
     window.addEventListener('click', handleCloseOnOverlay);
   }
 
   function handleCardClick(cardData) {
     updateSelectedCard(cardData);
-    window.addEventListener('keydown', handleCloseOnEscape);
+    window.addEventListener('keydown', memoizedEscape);
     window.addEventListener('click', handleCloseOnOverlay);
   }
 
   function handleDeletePlaceClick(cardData) {
     updateDeletePlacePopupState(true);
     updateCardQueuedForDeletion(cardData);
-    window.addEventListener('keydown', handleCloseOnEscape);
+    window.addEventListener('keydown', memoizedEscape);
     window.addEventListener('click', handleCloseOnOverlay);
   }
 
@@ -191,32 +205,37 @@ function App() {
     updateDeletePlacePopupState(false);
     updateInfoTooltipState(false);
     updateSelectedCard(null);
-    window.removeEventListener('keydown', handleCloseOnEscape);
+    window.removeEventListener('keydown', memoizedEscape);
     window.removeEventListener('click', handleCloseOnOverlay);
+    // window.removeEventListener('keydown', memoizedEnter);
   }
 
   function handleCloseOnEscape(e) {
     e.key === 'Escape' && closeAllPopups();
   }
+
   function handleCloseOnOverlay(e) {
     e.target.classList.contains('popup') && closeAllPopups();
   }
-  function closeOnEnter(evt) {
-    if (evt.key === 'Enter') {
-      evt.preventDefault();
-      closeAllPopups();
-    }
-  }
+
+  // function handleCloseOnEnter(evt) {
+  //   if (evt.key === 'Enter') {
+  //     evt.preventDefault();
+  //     console.log('Still here?');
+  //     closeAllPopups();
+  //   }
+  // }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Switch>
           <Route path="/signin">
-            <Header loggedIn={loggedIn} navText="Sign up" path="/signup" />
+            <Header loggedIn={loggedIn} navText="Sign up" path="/signup" userEmail={userEmail} />
             <AuthForm
               role="login"
               handleAuth={login}
+              setLoggedIn={setLoggedIn}
               closeAllPopups={closeAllPopups}
               isTooltipOpen={isInfoToolTipOpen}
               updateInfoTooltipState={updateInfoTooltipState}
@@ -225,10 +244,11 @@ function App() {
             />
           </Route>
           <Route path="/signup">
-            <Header loggedIn={loggedIn} navText="Log in" path="/signin" />
+            <Header loggedIn={loggedIn} navText="Log in" path="/signin" userEmail={userEmail} />
             <AuthForm
               role="register"
               handleAuth={register}
+              setLoggedIn={setLoggedIn}
               closeAllPopups={closeAllPopups}
               isTooltipOpen={isInfoToolTipOpen}
               updateInfoTooltipState={updateInfoTooltipState}
@@ -239,12 +259,10 @@ function App() {
           <ProtectedRoute exact path="/" loggedIn={loggedIn}>
             <Header
               loggedIn={loggedIn}
+              handleLogout={handleLogout}
               navText="Log out"
               path="/signin"
-              // not sure if needed
-              // handleNavClick={() => {
-              //   setLoggedIn(false);
-              // }}
+              userEmail={userEmail}
             />
             <Main
               onEditAvatarClick={handleAvatarClick}

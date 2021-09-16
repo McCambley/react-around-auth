@@ -11,6 +11,7 @@ export default function AuthForm({
   updateInfoTooltipState,
   setToolTipActionText,
   toolTipActionText,
+  setLoggedIn,
 }) {
   const history = useHistory();
   // auth states
@@ -28,24 +29,30 @@ export default function AuthForm({
 
   function handleFormSubmit(e) {
     e.preventDefault();
-    handleAuth(email, password).then((res) => {
-      if (res) {
-        console.log(res);
-        setEmail('');
-        setPassword('');
-        setIsSuccess(true);
-        updateInfoTooltipState(true);
-        // display success message for 1.5sec then redirect
-        // setTimeout(() => {
-        //   history.push('/');
-        // }, 1500);
-        history.push(redirectPath);
-      } else {
-        // display failure tooltip
+    handleAuth(email, password)
+      .then((res) => {
+        if (res) {
+          console.log(res);
+          setEmail('');
+          setPassword('');
+          setIsSuccess(true);
+          updateInfoTooltipState(true);
+          setLoggedIn(true);
+          setTimeout(() => {
+            updateInfoTooltipState(false);
+          }, 1500);
+          history.push(redirectPath);
+        } else {
+          // display failure tooltip
+          setIsSuccess(false);
+          updateInfoTooltipState(true);
+        }
+      })
+      .catch((error) => {
         setIsSuccess(false);
         updateInfoTooltipState(true);
-      }
-    });
+        console.log(error);
+      });
   }
 
   return (
