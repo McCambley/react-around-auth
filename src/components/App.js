@@ -9,7 +9,7 @@ import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
 import DeletePlacePopup from './DeletePlacePopup';
 import ProtectedRoute from './ProtectedRoute';
-// import Login from './AuthForm';
+import AuthorizationRoute from './AuthorizationRoute';
 import InfoTooltip from './InfoTooltip';
 import Error from './Error';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -47,18 +47,12 @@ function App() {
     [handleCloseOnEscape]
   );
 
-  // const memoizedEnter = React.useCallback((evt) => {
-  //   handleCloseOnEnter(evt);
-  // }, []);
-
   React.useEffect(() => {
     validateUser()
       .then((res) => {
-        console.log('Validated User, ', res);
         setUserEmail(res.data.email);
       })
       .catch((err) => {
-        console.log('Error validating user: ', err);
         handleLogout();
         history.push('/signin');
       });
@@ -85,17 +79,9 @@ function App() {
       .catch((err) => console.error(`Problem fetching user information: ${err}`));
   }, []);
 
-  // React.useEffect(() => {
-  //   if (isInfoToolTipOpen) {
-  //     console.log('adding close on enter');
-  //     window.addEventListener('keydown', memoizedEnter);
-  //   }
-  // }, [isInfoToolTipOpen, memoizedEnter]);
-
   function handleLogout() {
     localStorage.removeItem('token');
     setLoggedIn(false);
-    // history.push('/signin');
     console.log('Logging out!');
   }
 
@@ -207,7 +193,6 @@ function App() {
     updateSelectedCard(null);
     window.removeEventListener('keydown', memoizedEscape);
     window.removeEventListener('click', handleCloseOnOverlay);
-    // window.removeEventListener('keydown', memoizedEnter);
   }
 
   function handleCloseOnEscape(e) {
@@ -218,19 +203,11 @@ function App() {
     e.target.classList.contains('popup') && closeAllPopups();
   }
 
-  // function handleCloseOnEnter(evt) {
-  //   if (evt.key === 'Enter') {
-  //     evt.preventDefault();
-  //     console.log('Still here?');
-  //     closeAllPopups();
-  //   }
-  // }
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Switch>
-          <Route path="/signin">
+          <AuthorizationRoute path="/signin" loggedIn={loggedIn}>
             <Header loggedIn={loggedIn} navText="Sign up" path="/signup" userEmail={userEmail} />
             <AuthForm
               role="login"
@@ -242,8 +219,8 @@ function App() {
               toolTipActionText={toolTipActionText}
               setToolTipActionText={setToolTipActionText}
             />
-          </Route>
-          <Route path="/signup">
+          </AuthorizationRoute>
+          <AuthorizationRoute path="/signup" loggedIn={loggedIn}>
             <Header loggedIn={loggedIn} navText="Log in" path="/signin" userEmail={userEmail} />
             <AuthForm
               role="register"
@@ -255,7 +232,7 @@ function App() {
               toolTipActionText={toolTipActionText}
               setToolTipActionText={setToolTipActionText}
             />
-          </Route>
+          </AuthorizationRoute>
           <ProtectedRoute exact path="/" loggedIn={loggedIn}>
             <Header
               loggedIn={loggedIn}

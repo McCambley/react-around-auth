@@ -1,34 +1,30 @@
 const BASE_URL = 'https://register.nomoreparties.co';
 
 export const register = (email, password) => {
-  return (
-    fetch(`${BASE_URL}/signup`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
+  return fetch(`${BASE_URL}/signup`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    }),
+  })
+    .then((response) => {
+      if (response.status === 201) {
+        return response.json();
+      }
+      if (response.status === 400) {
+        throw new Error(
+          'One of the fields was filled in incorrectly or a user with that email already exists'
+        );
+      }
     })
-      .then((response) => {
-        if (response.status === 201) {
-          return response.json();
-        }
-        if (response.status === 400) {
-          throw new Error(
-            'One of the fields was filled in incorrectly or a user with that email already exists'
-          );
-        }
-      })
-      // .then((res) => {
-      //   res && console.log('Here', res);
-      // })
-      .catch((error) => {
-        error && console.log(error);
-      })
-  );
+
+    .catch((error) => {
+      error && console.log(error);
+    });
 };
 
 export const login = (email, password) => {
@@ -87,5 +83,3 @@ export const validateUser = () => {
       console.log(error);
     });
 };
-
-// export default { register, login, validateUser };

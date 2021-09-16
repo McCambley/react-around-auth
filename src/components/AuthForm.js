@@ -19,54 +19,65 @@ export default function AuthForm({
   const [password, setPassword] = React.useState('');
   // tooltip states
   const [isSuccess, setIsSuccess] = React.useState(true);
-  const redirectPath = role === 'register' ? '/signin' : '/';
+  const authForm = React.useRef();
 
-  React.useEffect(() => {
-    setToolTipActionText(role === 'login' ? 'logged in' : 'registered');
-  }, [role, setToolTipActionText]);
+  const redirectPath = role === 'register' ? '/signin' : '/';
 
   const { title, button, subtitle, path } = formText[role];
 
+  function updateSuccessMessage() {
+    setToolTipActionText(role === 'login' ? 'logged in' : 'registered');
+  }
+
+  function displayTooltip(isSuccessful) {
+    setIsSuccess(isSuccessful);
+    updateInfoTooltipState(true);
+    setTimeout(() => {
+      updateInfoTooltipState(false);
+    }, 1500);
+  }
+
   function handleFormSubmit(e) {
     e.preventDefault();
+
+    // prevent submission if form is invalid
+    if (!authForm.current.checkValidity()) {
+      authForm.current.reportValidity();
+      return;
+    }
+
     handleAuth(email, password)
       .then((res) => {
         if (res) {
-          console.log(res);
+          updateSuccessMessage();
           setEmail('');
           setPassword('');
-          setIsSuccess(true);
-          updateInfoTooltipState(true);
-          setLoggedIn(true);
-          setTimeout(() => {
-            updateInfoTooltipState(false);
-          }, 1500);
+          role === 'login' && setLoggedIn(true);
+          displayTooltip(true);
           history.push(redirectPath);
         } else {
           // display failure tooltip
-          setIsSuccess(false);
-          updateInfoTooltipState(true);
+          displayTooltip(false);
         }
       })
       .catch((error) => {
-        setIsSuccess(false);
-        updateInfoTooltipState(true);
-        console.log(error);
+        displayTooltip(false);
       });
   }
 
   return (
     <div className="auth">
-      <form action="login" className="auth__form">
+      <form action="login" className="auth__form" ref={authForm}>
         <h1 className="auth__title">{title}</h1>
         <div className="auth__input-container">
           <input
-            type="text"
+            type="email"
             name="email"
             className="auth__input"
             value={email}
             placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
           <input
             type="password"
@@ -75,6 +86,7 @@ export default function AuthForm({
             value={password}
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
         <button type="submit" onClick={handleFormSubmit} className="auth__button">
