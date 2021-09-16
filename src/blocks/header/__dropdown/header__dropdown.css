@@ -7,13 +7,14 @@
     display: flex;
     max-height: 0px;
     overflow: hidden;
-    transition: max-height 0.5s ease, padding 0.5s ease, opacity 0.3s ease 0.1s, filter 0.5s ease;
+    transition: max-height 0.5s ease, padding 0.5s ease, opacity 0.3s ease 0.1s, color 0.7s ease;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 0;
     opacity: 0;
     box-sizing: border-box;
-    filter: blur(10px);
+    color: #000;
+    /* filter: blur(10px); */
   }
 }
