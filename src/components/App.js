@@ -40,12 +40,14 @@ function App() {
   const history = useHistory();
 
   React.useEffect(() => {
-    // register(`${Math.random()}@test.com`, 'cool');
-    // .then((response) => {
-    //   console.log(response.data._id);
+    login(`cool@tasdfesttest.com`, 'cool').then((response) => {
+      console.log(response);
+    });
+    // register(`${Math.random()}@tasdfesttest.com`, 'cool').then((response) => {
+    //   console.log(response);
     // });
     // validateUser();
-    console.log(history);
+    // console.log(history);
   }, []);
 
   React.useEffect(() => {
@@ -74,6 +76,14 @@ function App() {
       window.removeEventListener('keydown', closeOnEnter);
     }
   }, [isInfoToolTipOpen]);
+
+  // function handleRegister(email, password) {
+  //   register(email, password).then(data);
+  // }
+
+  // function handleLogin(email, password) {
+  //   login(email, password);
+  // }
 
   function handleAvatarClick() {
     updateAvatarPopupState(true);

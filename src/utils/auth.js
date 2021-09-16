@@ -17,58 +17,59 @@ export const register = (email, password) => {
           return response.json();
         }
         if (response.status === 400) {
-          throw new Error('One of the fields was filled in incorrectly ');
+          throw new Error(
+            'One of the fields was filled in incorrectly or a user with that email already exists'
+          );
         }
-        // return response.json();
       })
       // .then((res) => {
-      //   return res._id;
+      //   res && console.log('Here', res);
       // })
       .catch((error) => {
-        console.log(error);
+        error && console.log(error);
       })
   );
 };
 
 export const login = (email, password) => {
-  return (
-    fetch(`${BASE_URL}/signin`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
+  return fetch(`${BASE_URL}/signin`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    }),
+  })
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json();
+      }
+      if (response.status === 400) {
+        throw new Error('One or more of the fields were not provided');
+      }
+      if (response.status === 400) {
+        throw new Error('The user with the specified email not found ');
+      }
+      // return response.json();
     })
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-        }
-        if (response.status === 400) {
-          throw new Error('One or more of the fields were not provided');
-        }
-        if (response.status === 400) {
-          throw new Error('The user with the specified email not found ');
-        }
-        // return response.json();
-      })
-      // .then((res) => {
-      //   return res._id;
-      // })
-      .catch((error) => {
-        console.log(error);
-      })
-  );
+    .then((res) => {
+      localStorage.setItem('token', res.token);
+      return res;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
-export const validateUser = (jwt) => {
+export const validateUser = () => {
+  const token = localStorage.getItem('token');
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${jwt}`,
+      Authorization: `Bearer ${token}`,
     },
   })
     .then((response) => {
