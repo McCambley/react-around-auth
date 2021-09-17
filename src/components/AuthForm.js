@@ -26,6 +26,14 @@ export default function AuthForm({
   const redirectPath = role === 'register' ? '/signin' : '/';
   const { title, button, subtitle, path } = formText[role];
 
+  React.useEffect(() => {
+    setTimeout(() => {
+      if (isTooltipOpen) {
+        closeAllPopups();
+      }
+    }, 2000);
+  }, [closeAllPopups, isTooltipOpen]);
+
   function updateSuccessMessage() {
     setToolTipActionText(role === 'login' ? 'logged in' : 'registered');
   }
@@ -35,13 +43,6 @@ export default function AuthForm({
     window.addEventListener('click', handleCloseOnOverlay);
     setIsSuccess(isSuccessful);
     updateInfoTooltipState(true);
-    // setTimeout(() => {
-    //   console.log(isTooltipOpen);
-    //   if (!!isTooltipOpen) {
-    //     console.log('wtf');
-    //     closeAllPopups();
-    //   }
-    // }, 100);
   }
 
   function handleFormSubmit(e) {
@@ -64,6 +65,7 @@ export default function AuthForm({
           history.push(redirectPath);
         } else {
           // display failure tooltip
+          console.log("what's going on here?");
           displayTooltip(false);
         }
       })

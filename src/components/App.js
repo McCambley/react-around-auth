@@ -37,7 +37,7 @@ function App() {
   const [currentUser, updateCurrentUser] = React.useState({});
   const [userEmail, setUserEmail] = React.useState('');
   // auth states
-  const [loggedIn, setLoggedIn] = React.useState(true);
+  const [loggedIn, setLoggedIn] = React.useState(false);
   const history = useHistory();
 
   const memoizedEscape = React.useCallback((evt) => {
@@ -71,6 +71,7 @@ function App() {
       validateUser()
         .then((res) => {
           setUserEmail(res.data.email);
+          setLoggedIn(true);
         })
         .catch((err) => {
           console.error(`Validation error: ${err}`);
