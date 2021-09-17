@@ -45,21 +45,7 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
-    loggedIn &&
-      validateUser()
-        .then((res) => {
-          setUserEmail(res.data.email);
-          console.log(`Validation success`);
-        })
-        .catch((err) => {
-          console.error(`Validation error: ${err}`);
-          handleLogout();
-          history.push('/signin');
-        });
-  }, [history, loggedIn]);
-
-  React.useEffect(() => {});
+  // React.useEffect(() => {});
 
   React.useEffect(() => {
     api
@@ -79,6 +65,20 @@ function App() {
       })
       .catch((err) => console.error(`Problem fetching user information: ${err}`));
   }, []);
+
+  React.useEffect(() => {
+    if (localStorage.getItem('token')) {
+      validateUser()
+        .then((res) => {
+          setUserEmail(res.data.email);
+        })
+        .catch((err) => {
+          console.error(`Validation error: ${err}`);
+          handleLogout();
+          history.push('/signin');
+        });
+    }
+  }, [history, loggedIn]);
 
   function handleLogout() {
     localStorage.removeItem('token');
@@ -215,6 +215,8 @@ function App() {
               updateInfoTooltipState={updateInfoTooltipState}
               toolTipActionText={toolTipActionText}
               setToolTipActionText={setToolTipActionText}
+              memoizedEscape={memoizedEscape}
+              handleCloseOnOverlay={handleCloseOnOverlay}
             />
           </AuthorizationRoute>
           <AuthorizationRoute path="/signup" loggedIn={loggedIn}>
@@ -228,6 +230,8 @@ function App() {
               updateInfoTooltipState={updateInfoTooltipState}
               toolTipActionText={toolTipActionText}
               setToolTipActionText={setToolTipActionText}
+              memoizedEscape={memoizedEscape}
+              handleCloseOnOverlay={handleCloseOnOverlay}
             />
           </AuthorizationRoute>
           <ProtectedRoute exact path="/" loggedIn={loggedIn}>

@@ -21,9 +21,8 @@ export const register = (email, password) => {
         );
       }
     })
-
     .catch((error) => {
-      error && console.log(error);
+      console.error(error);
     });
 };
 
@@ -55,7 +54,7 @@ export const login = (email, password) => {
       return res;
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -80,6 +79,6 @@ export const validateUser = () => {
       }
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };

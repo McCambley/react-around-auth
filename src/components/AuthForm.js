@@ -12,6 +12,8 @@ export default function AuthForm({
   setToolTipActionText,
   toolTipActionText,
   setLoggedIn,
+  memoizedEscape,
+  handleCloseOnOverlay,
 }) {
   const history = useHistory();
   // auth states
@@ -22,7 +24,6 @@ export default function AuthForm({
   const authForm = React.useRef();
 
   const redirectPath = role === 'register' ? '/signin' : '/';
-
   const { title, button, subtitle, path } = formText[role];
 
   function updateSuccessMessage() {
@@ -30,11 +31,17 @@ export default function AuthForm({
   }
 
   function displayTooltip(isSuccessful) {
+    window.addEventListener('keydown', memoizedEscape);
+    window.addEventListener('click', handleCloseOnOverlay);
     setIsSuccess(isSuccessful);
     updateInfoTooltipState(true);
-    setTimeout(() => {
-      updateInfoTooltipState(false);
-    }, 2000);
+    // setTimeout(() => {
+    //   console.log(isTooltipOpen);
+    //   if (!!isTooltipOpen) {
+    //     console.log('wtf');
+    //     closeAllPopups();
+    //   }
+    // }, 100);
   }
 
   function handleFormSubmit(e) {
@@ -50,10 +57,10 @@ export default function AuthForm({
       .then((res) => {
         if (res) {
           updateSuccessMessage();
+          displayTooltip(true);
+          role === 'login' && setLoggedIn(true);
           setEmail('');
           setPassword('');
-          role === 'login' && setLoggedIn(true);
-          displayTooltip(true);
           history.push(redirectPath);
         } else {
           // display failure tooltip
