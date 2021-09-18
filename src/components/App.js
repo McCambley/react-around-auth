@@ -14,8 +14,10 @@ import InfoTooltip from './InfoTooltip';
 import Error from './Error';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import api from '../utils/api';
-import { register, login, validateUser } from '../utils/auth';
-import AuthForm from './AuthForm';
+import { validateUser } from '../utils/auth';
+// import AuthForm from './AuthForm';
+import Register from './Register';
+import Login from './Login';
 
 function App() {
   // popup states
@@ -28,6 +30,7 @@ function App() {
   const [isLoading, updateLoading] = React.useState(true);
   const [isSubmitPending, updateSubmitPendingStatus] = React.useState(false);
   const [toolTipActionText, setToolTipActionText] = React.useState('');
+  const [isSuccess, setIsSuccess] = React.useState(true);
 
   // card states
   const [selectedCard, updateSelectedCard] = React.useState(null);
@@ -179,6 +182,16 @@ function App() {
       .catch((err) => console.error(`Problem adding new place: ${err}`));
   }
 
+  function handleDisplayTooltip(success, text) {
+    setEventListeners();
+    setIsSuccess(success);
+    setToolTipActionText(text);
+    updateInfoTooltipState(true);
+    setTimeout(() => {
+      closeAllPopups();
+    }, 2000);
+  }
+
   function updateInputValidity(evt, inputValidityUpdater, errorMessageUpdater) {
     if (!evt.target.validity.valid) {
       inputValidityUpdater(false);
@@ -206,32 +219,30 @@ function App() {
         <Switch>
           <AuthorizationRoute path="/signin" loggedIn={loggedIn}>
             <Header loggedIn={loggedIn} navText="Sign up" path="/signup" userEmail={userEmail} />
-            <AuthForm
-              role="login"
-              handleAuth={login}
+            <Login
               setLoggedIn={setLoggedIn}
-              closeAllPopups={closeAllPopups}
-              isTooltipOpen={isInfoToolTipOpen}
-              updateInfoTooltipState={updateInfoTooltipState}
-              toolTipActionText={toolTipActionText}
-              setToolTipActionText={setToolTipActionText}
-              memoizedEscape={memoizedEscape}
-              handleCloseOnOverlay={memoizedOverlay}
+              displayTooltip={handleDisplayTooltip}
+              // closeAllPopups={closeAllPopups}
+              // isTooltipOpen={isInfoToolTipOpen}
+              // updateInfoTooltipState={updateInfoTooltipState}
+              // toolTipActionText={toolTipActionText}
+              // setToolTipActionText={setToolTipActionText}
+              // memoizedEscape={memoizedEscape}
+              // handleCloseOnOverlay={memoizedOverlay}
             />
           </AuthorizationRoute>
           <AuthorizationRoute path="/signup" loggedIn={loggedIn}>
             <Header loggedIn={loggedIn} navText="Log in" path="/signin" userEmail={userEmail} />
-            <AuthForm
-              role="register"
-              handleAuth={register}
+            <Register
               setLoggedIn={setLoggedIn}
-              closeAllPopups={closeAllPopups}
-              isTooltipOpen={isInfoToolTipOpen}
-              updateInfoTooltipState={updateInfoTooltipState}
-              toolTipActionText={toolTipActionText}
-              setToolTipActionText={setToolTipActionText}
-              memoizedEscape={memoizedEscape}
-              handleCloseOnOverlay={memoizedOverlay}
+              displayTooltip={handleDisplayTooltip}
+              // closeAllPopups={closeAllPopups}
+              // isTooltipOpen={isInfoToolTipOpen}
+              // updateInfoTooltipState={updateInfoTooltipState}
+              // toolTipActionText={toolTipActionText}
+              // setToolTipActionText={setToolTipActionText}
+              // memoizedEscape={memoizedEscape}
+              // handleCloseOnOverlay={memoizedOverlay}
             />
           </AuthorizationRoute>
           <ProtectedRoute exact path="/" loggedIn={loggedIn}>
@@ -282,18 +293,18 @@ function App() {
               onClose={closeAllPopups}
             />
             <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-            <InfoTooltip
-              isOpen={isInfoToolTipOpen}
-              onClose={closeAllPopups}
-              isSuccess={true}
-              action={toolTipActionText}
-            />
           </ProtectedRoute>
           <Route>
             <Header />
             <Error />
           </Route>
         </Switch>
+        <InfoTooltip
+          isOpen={isInfoToolTipOpen}
+          onClose={closeAllPopups}
+          isSuccess={isSuccess}
+          action={toolTipActionText}
+        />
       </div>
     </CurrentUserContext.Provider>
   );
