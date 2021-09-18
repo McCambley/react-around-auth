@@ -43,7 +43,6 @@ export const login = (email, password) => {
       if (response.status === 401) {
         throw new Error('The user with the specified email not found ');
       }
-      // return response.json();
     })
     .then((res) => {
       localStorage.setItem('token', res.token);

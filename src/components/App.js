@@ -15,7 +15,6 @@ import Error from './Error';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import api from '../utils/api';
 import { validateUser } from '../utils/auth';
-// import AuthForm from './AuthForm';
 import Register from './Register';
 import Login from './Login';
 
@@ -219,31 +218,11 @@ function App() {
         <Switch>
           <AuthorizationRoute path="/signin" loggedIn={loggedIn}>
             <Header loggedIn={loggedIn} navText="Sign up" path="/signup" userEmail={userEmail} />
-            <Login
-              setLoggedIn={setLoggedIn}
-              displayTooltip={handleDisplayTooltip}
-              // closeAllPopups={closeAllPopups}
-              // isTooltipOpen={isInfoToolTipOpen}
-              // updateInfoTooltipState={updateInfoTooltipState}
-              // toolTipActionText={toolTipActionText}
-              // setToolTipActionText={setToolTipActionText}
-              // memoizedEscape={memoizedEscape}
-              // handleCloseOnOverlay={memoizedOverlay}
-            />
+            <Login setLoggedIn={setLoggedIn} displayTooltip={handleDisplayTooltip} />
           </AuthorizationRoute>
           <AuthorizationRoute path="/signup" loggedIn={loggedIn}>
             <Header loggedIn={loggedIn} navText="Log in" path="/signin" userEmail={userEmail} />
-            <Register
-              setLoggedIn={setLoggedIn}
-              displayTooltip={handleDisplayTooltip}
-              // closeAllPopups={closeAllPopups}
-              // isTooltipOpen={isInfoToolTipOpen}
-              // updateInfoTooltipState={updateInfoTooltipState}
-              // toolTipActionText={toolTipActionText}
-              // setToolTipActionText={setToolTipActionText}
-              // memoizedEscape={memoizedEscape}
-              // handleCloseOnOverlay={memoizedOverlay}
-            />
+            <Register setLoggedIn={setLoggedIn} displayTooltip={handleDisplayTooltip} />
           </AuthorizationRoute>
           <ProtectedRoute exact path="/" loggedIn={loggedIn}>
             <Header
