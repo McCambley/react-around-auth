@@ -45,8 +45,6 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // React.useEffect(() => {});
-
   React.useEffect(() => {
     api
       .getGroupCards()
@@ -87,35 +85,35 @@ function App() {
     setUserEmail('');
   }
 
-  function handleAvatarClick() {
-    updateAvatarPopupState(true);
+  function setEventListeners() {
     window.addEventListener('keydown', memoizedEscape);
     window.addEventListener('click', handleCloseOnOverlay);
+  }
+
+  function handleAvatarClick() {
+    updateAvatarPopupState(true);
+    setEventListeners();
   }
 
   function handleEditProfileClick() {
     updateEditProfilePopupState(true);
-    window.addEventListener('keydown', memoizedEscape);
-    window.addEventListener('click', handleCloseOnOverlay);
+    setEventListeners();
   }
 
   function handleAddPlaceClick() {
     updateAddPlacePopupState(true);
-    window.addEventListener('keydown', memoizedEscape);
-    window.addEventListener('click', handleCloseOnOverlay);
+    setEventListeners();
   }
 
   function handleCardClick(cardData) {
     updateSelectedCard(cardData);
-    window.addEventListener('keydown', memoizedEscape);
-    window.addEventListener('click', handleCloseOnOverlay);
+    setEventListeners();
   }
 
   function handleDeletePlaceClick(cardData) {
     updateDeletePlacePopupState(true);
     updateCardQueuedForDeletion(cardData);
-    window.addEventListener('keydown', memoizedEscape);
-    window.addEventListener('click', handleCloseOnOverlay);
+    setEventListeners();
   }
 
   function handleUpdateUser(userData) {
