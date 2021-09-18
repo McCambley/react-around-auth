@@ -10,20 +10,16 @@ export const register = (email, password) => {
       email: email,
       password: password,
     }),
-  })
-    .then((response) => {
-      if (response.status === 201) {
-        return response.json();
-      }
-      if (response.status === 400) {
-        throw new Error(
-          'One of the fields was filled in incorrectly or a user with that email already exists'
-        );
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  }).then((response) => {
+    if (response.status === 201) {
+      return response.json();
+    }
+    if (response.status === 400) {
+      throw new Error(
+        'One of the fields was filled in incorrectly or a user with that email already exists'
+      );
+    }
+  });
 };
 
 export const login = (email, password) => {
@@ -44,7 +40,7 @@ export const login = (email, password) => {
       if (response.status === 400) {
         throw new Error('One or more of the fields were not provided');
       }
-      if (response.status === 400) {
+      if (response.status === 401) {
         throw new Error('The user with the specified email not found ');
       }
       // return response.json();
@@ -52,9 +48,6 @@ export const login = (email, password) => {
     .then((res) => {
       localStorage.setItem('token', res.token);
       return res;
-    })
-    .catch((error) => {
-      console.error(error);
     });
 };
 
@@ -66,19 +59,15 @@ export const validateUser = () => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-  })
-    .then((response) => {
-      if (response.status === 200 || response.status === 201) {
-        return response.json();
-      }
-      if (response.status === 400) {
-        throw new Error('Token not provided or provided in the wrong format');
-      }
-      if (response.status === 401) {
-        throw new Error('The provided token is invalid ');
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  }).then((response) => {
+    if (response.status === 200 || response.status === 201) {
+      return response.json();
+    }
+    if (response.status === 400) {
+      throw new Error('Token not provided or provided in the wrong format');
+    }
+    if (response.status === 401) {
+      throw new Error('The provided token is invalid ');
+    }
+  });
 };
