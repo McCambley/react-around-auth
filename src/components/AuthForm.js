@@ -76,7 +76,7 @@ export default function AuthForm({
 
   return (
     <div className="auth">
-      <form action="login" className="auth__form" ref={authForm}>
+      <form action="login" className="auth__form" ref={authForm} onSubmit={handleFormSubmit}>
         <h1 className="auth__title">{title}</h1>
         <div className="auth__input-container">
           <input
@@ -98,19 +98,19 @@ export default function AuthForm({
             required
           />
         </div>
-        <button type="submit" onClick={handleFormSubmit} className="auth__button">
+        <button type="submit" className="auth__button">
           {button}
         </button>
         <Link to={path} className="auth__subtitle">
           {subtitle}
         </Link>
       </form>
-      <InfoTooltip
+      {/* <InfoTooltip
         isOpen={isTooltipOpen}
         isSuccess={isSuccess}
         onClose={closeAllPopups}
         action={toolTipActionText}
-      />
+      /> */}
     </div>
   );
 }
