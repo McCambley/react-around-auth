@@ -45,6 +45,11 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const memoizedOverlay = React.useCallback((evt) => {
+    evt.target.classList.contains('popup') && closeAllPopups();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   React.useEffect(() => {
     api
       .getGroupCards()
@@ -87,7 +92,7 @@ function App() {
 
   function setEventListeners() {
     window.addEventListener('keydown', memoizedEscape);
-    window.addEventListener('click', handleCloseOnOverlay);
+    window.addEventListener('click', memoizedOverlay);
   }
 
   function handleAvatarClick() {
@@ -192,11 +197,7 @@ function App() {
     updateInfoTooltipState(false);
     updateSelectedCard(null);
     window.removeEventListener('keydown', memoizedEscape);
-    window.removeEventListener('click', handleCloseOnOverlay);
-  }
-
-  function handleCloseOnOverlay(e) {
-    e.target.classList.contains('popup') && closeAllPopups();
+    window.removeEventListener('click', memoizedOverlay);
   }
 
   return (
@@ -215,7 +216,7 @@ function App() {
               toolTipActionText={toolTipActionText}
               setToolTipActionText={setToolTipActionText}
               memoizedEscape={memoizedEscape}
-              handleCloseOnOverlay={handleCloseOnOverlay}
+              handleCloseOnOverlay={memoizedOverlay}
             />
           </AuthorizationRoute>
           <AuthorizationRoute path="/signup" loggedIn={loggedIn}>
@@ -230,7 +231,7 @@ function App() {
               toolTipActionText={toolTipActionText}
               setToolTipActionText={setToolTipActionText}
               memoizedEscape={memoizedEscape}
-              handleCloseOnOverlay={handleCloseOnOverlay}
+              handleCloseOnOverlay={memoizedOverlay}
             />
           </AuthorizationRoute>
           <ProtectedRoute exact path="/" loggedIn={loggedIn}>
