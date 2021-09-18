@@ -8,15 +8,13 @@ export default function DeletePlacePopup({ isOpen, onClose, onDeletePlace, card,
   }
 
   return (
-    <>
-      <PopupWithForm
-        onSubmit={handleSubmit}
-        name="delete"
-        title="Are You Sure?"
-        buttonLabel={isSubmitting ? 'Deleting...' : 'Yes'}
-        isOpen={isOpen}
-        onClose={onClose}
-      />
-    </>
+    <PopupWithForm
+      onSubmit={handleSubmit}
+      name="delete"
+      title="Are You Sure?"
+      buttonLabel={isSubmitting ? 'Deleting...' : 'Yes'}
+      isOpen={isOpen}
+      onClose={onClose}
+    />
   );
 }
