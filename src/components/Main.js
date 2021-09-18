@@ -13,12 +13,19 @@ export default function Main(props) {
       <section className="profile">
         <div className="profile__info-box">
           <div className="profile__avatar-wrapper">
-            <img id="avatar" src={currentUser.avatar} alt="" className={`profile__avatar ${props.isLoading ? 'shimmer' : ''}`} />
+            <img
+              id="avatar"
+              src={currentUser.avatar}
+              alt="Current user portrait"
+              className={`profile__avatar ${props.isLoading ? 'shimmer' : ''}`}
+            />
             <div onClick={props.onEditAvatarClick} className="profile__avatar-overlay"></div>
           </div>
           <div className="profile__text">
             <div className="profile__text-top">
-              <h1 className={`profile__name ${props.isLoading ? 'shimmer' : ''}`}>{currentUser.name}</h1>
+              <h1 className={`profile__name ${props.isLoading ? 'shimmer' : ''}`}>
+                {currentUser.name}
+              </h1>
               <button
                 onClick={props.onEditProfileClick}
                 type="button"
@@ -27,7 +34,9 @@ export default function Main(props) {
                 aria-label="Edit profile"
               ></button>
             </div>
-            <p className={`profile__title ${props.isLoading ? 'shimmer' : ''}`}>{currentUser.about}</p>
+            <p className={`profile__title ${props.isLoading ? 'shimmer' : ''}`}>
+              {currentUser.about}
+            </p>
           </div>
         </div>
         <button
