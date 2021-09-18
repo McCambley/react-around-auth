@@ -289,7 +289,7 @@ function App() {
               action={toolTipActionText}
             />
           </ProtectedRoute>
-          <Route path="/">
+          <Route>
             <Header />
             <Error />
           </Route>
